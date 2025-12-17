@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">parkest</string>
+    <string name="title_activity_main">parkest</string>
+    <string name="package_name">io.dedyn.parkest</string>
+    <string name="custom_url_scheme">io.dedyn.parkest</string>
+</resources>
