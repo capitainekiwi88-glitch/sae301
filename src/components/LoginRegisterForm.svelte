@@ -15,42 +15,41 @@
 
 </script>
 
+<div class="items-center justify-center ml-auto mr-auto min-h-screen flex flex-col">
 {#if register}
-    <div class="items-center justify-center ml-auto mr-auto min-h-screen flex">
-    <div class="w-5/6 flex flex-col gap-3 border-2 border-violet-950 shadow-md shadow-violet-950 rounded-lg p-4 text-center">
-      <h2>Register to YAMS</h2>
+    <div class="w-5/6 flex flex-col gap-3 border-2 border-[#007cbf] rounded-lg p-4 text-center">
+      <h2>S'enregistrer sur Parkest</h2>
       <input type="text" bind:value={username} placeholder="Username" required />
       <input type="password" bind:value={password} placeholder="Password" required />
-      <button onclick={() => { register = false; username = ""; password = ""; }} class="cursor-pointer text-xs text-violet-800" >Login</button>
+      <button onclick={() => { register = false; username = ""; password = ""; }} class="cursor-pointer text-xs text-[#007cbf]" >Login</button>
       <button class="cursor-pointer" onclick={async () => {
         try{
           await get(UserContent).register(username, password);
           UserContent.update((u) => u);
+          window.location.reload();
         } catch (error) {
           console.error("Register error", error);
           errorMessage = String(error);
         }
       }}>Register</button>
     </div>
-  </div>
 {:else}
-<div class="items-center justify-center ml-auto mr-auto min-h-screen flex">
-    <div class="w-5/6 flex flex-col gap-3 border-2 border-violet-950 shadow-md shadow-violet-950 rounded-lg p-4 text-center">
-      <h2>Login to YAMS</h2>
+    <div class="w-5/6 flex flex-col gap-3 border-2 border-[#007cbf] rounded-lg p-4 text-center">
+      <h2>Se connecter à Parkest</h2>
       <input type="text" bind:value={username} placeholder="Username" required />
       <input type="password" bind:value={password} placeholder="Password" required />
-      <button onclick={() => { register = true; username = ""; password = ""; }} class="cursor-pointer text-xs text-violet-800">Register</button>
+      <button onclick={() => { register = true; username = ""; password = ""; }} class="cursor-pointer text-xs text-[#007cbf]">Register</button>
       <button class="cursor-pointer" onclick={async () => {
         try{
           await get(UserContent).login(username, password);
           UserContent.update((u) => u);
+          window.location.reload();
         } catch (error) {
           console.error("Login error", error);
           errorMessage = String(error);
         }
       }}>Login</button>
     </div>
-  </div>
 {/if}
 
 {#if errorMessage !== ""}
@@ -58,3 +57,4 @@
     {errorMessage}
   </div>
 {/if}
+</div>
