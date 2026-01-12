@@ -18,6 +18,7 @@ user.token = parsed.token || "";
 const UserContent = writable(user);
 
 UserContent.subscribe(value => {
+    value.updateParams()
     localStorage.setItem('user', JSON.stringify(value));
 });
 
