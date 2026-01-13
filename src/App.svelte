@@ -18,8 +18,7 @@
   import { mapStore } from './stores/mapStore';
   import { UserContent } from './stores/userStore';
 
-  let hasArrived = false;
-  let errorMessage: string | null = null; // Ajout de l'état d'erreur
+  let errorMessage: string | null = null;
   let hasArrived = false;
 
   const routes: RouteConfig[] = [
