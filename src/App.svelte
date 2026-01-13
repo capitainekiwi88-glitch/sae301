@@ -19,6 +19,8 @@
   import { UserContent } from './stores/userStore';
 
   let hasArrived = false;
+  let errorMessage: string | null = null; // Ajout de l'état d'erreur
+  let hasArrived = false;
 
   const routes: RouteConfig[] = [
     {
@@ -69,19 +71,24 @@
   async function mapInit() {
     console.log('mapInit started');
     let map = get(mapStore);
-    
+    errorMessage = null;
     // Ensure permissions are checked/requested before proceeding
-    try {
+  try {
       const permStatus = await Geolocation.checkPermissions();
       if (permStatus.location !== 'granted') {
         const requestStatus = await Geolocation.requestPermissions();
+        if (requestStatus.location !== 'granted') {
+          errorMessage = "L'accès à la localisation est nécessaire pour utiliser l'application.";
+          return;
+        }
       }
     } catch (e) {
-      console.error('Error checking permissions in mapInit', e);
+      errorMessage = "Erreur lors de la demande de permissions.";
+      console.error(e);
+      return;
     }
 
     if (!map) {
-      console.log('Creating new Map instance');
       map = new Map('map');
       mapStore.set(map);
       
@@ -91,10 +98,12 @@
         map.latitude = position.latitude;
       } catch (e) {
         console.error('Could not get initial position', e);
-        position.longitude = 0.1278; // Pour afficher les parkings même sans position (TEST SEULEMENT - A SUPPRIMER)
-        position.latitude = 51.5074; // IDEM  ----------------------------------------------------------------------
-        map.longitude =  0.1278; 
-        map.latitude = 51.5074;
+        errorMessage = "Impossible de récupérer votre position actuelle.";
+        // A supprimer si pas de position par défaut
+        position.longitude = 6.17269; 
+        position.latitude = 49.11911;
+        map.longitude = 6.17269;
+        map.latitude = 49.11911;
       }
 
       map.loadMap();
@@ -182,4 +191,20 @@
     <Router {routes} />
 
   {/if}
+  {#if errorMessage} 
+      <div class="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-white/95 p-6 text-center"> 
+          <div class="bg-red-100 p-4 rounded-full mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-gray-800 mb-2">Localisation requise</h2> 
+          <p class="text-gray-600 mb-6 max-w-xs">{errorMessage}</p> 
+          <button 
+            on:click={() => window.location.reload()} 
+            class="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg active:scale-95 transition-transform">
+            Réessayer
+          </button> 
+      </div> 
+    {/if}
 </main>
