@@ -138,7 +138,7 @@
           const destinationLocation = new LngLat(currentRoute.LngLat.lng, currentRoute.LngLat.lat);
           const distance = userLocation.distanceTo(destinationLocation);
 
-          if(distance < 4000){
+          if(distance < 40){
             hasArrived = true;
             triggerArrivalAnimation(map, destinationLocation);
             console.log("Vous êtes arrivé à destination !");
